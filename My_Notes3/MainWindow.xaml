@@ -1,0 +1,179 @@
+﻿<Window x:Class="My_Notes3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:My_Notes3"
+        xmlns:resX ="clr-namespace:My_Notes3.Properties"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Closed="Window_Closed"
+        FlowDirection="{Binding Source={StaticResource l10n}, Path=locItems.flowDirection}"
+        Icon="./Resources/My_Notes_Icon.PNG"
+        Title="{Binding Source={StaticResource l10n}, Path=locItems.appName}" Height="675" Width="1000" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <local:MyConverter x:Key="ImgConverter"/>
+    </Window.Resources>
+   
+    <Grid Name="Grid_Parent" Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="4*"/>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2.5*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <!--<Rectangle Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" Fill="#6B91C6"/>
+        <Rectangle Grid.Column="0" Grid.Row="1" Grid.RowSpan="3" Fill="#6B91C6" />
+        <Rectangle Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Fill="#D0DAEA"/>
+        <Rectangle Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Fill="#B2C8E6"/>-->
+        <Rectangle Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="5" Fill="#FDF7C0"/>
+        <Frame Name="Fr_NoImage" Source="No_Image.xaml" Grid.Column="2" Grid.Row="1" Grid.RowSpan="3" Visibility="Hidden"/>
+        <Frame Name="Fr_No_Notes" Source="No_Notes.xaml" Grid.Column="0" Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="3" Visibility="Hidden"/>
+        <StackPanel Margin="5" Grid.Row="0" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+            <TextBlock Name="Tblk_label_Language_Settings" VerticalAlignment="Bottom" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_LanguageSettings}"/>
+            <ComboBox Name="Combx_Language_select" SelectionChanged="Combx_Language_select_SelectionChanged" Width="150"/>
+        </StackPanel>
+        <StackPanel Margin="5" Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+            <TextBlock Name="Tblk_Label_SelectCourseName" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_selectcourse}"/>
+            <ComboBox  Name="Combx_SelectCourse" SelectionChanged="Combx_SelectCourse_SelectionChanged" MaxHeight="30" BorderBrush="Gray" BorderThickness="2" HorizontalAlignment="Stretch" Margin="0,12,0,0">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock x:Name="Tbx_CourseNames" TextWrapping="Wrap" Padding="4,0,0,0" Text="{Binding CourseName}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                <Button Name="Btn_Add_New_Course" Click="Btn_Add_New_Course_Click" Margin="0,12,5,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="30" Width="85" ToolTip="{Binding Source={StaticResource l10n}, Path=locItems.tooltip_addNewCourse}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="C:\Users\balah\source\repos\My_Notes3\My_Notes3\Resources\AddFolder_16x.png"/>
+                        <!--<materialDesign:PackIcon Kind="FolderPlusOutline"  Foreground="Black"  Margin="-4,0,0,-2"/>-->
+                        <TextBlock Name="Tblk_Label_Add" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_newcourse}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Name="Btn_Delete_Course" Click="Btn_Delete_Course_Click" Margin="5,12,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="30" Width="85" ToolTip="{Binding Source={StaticResource l10n}, Path=locItems.tooltip_deleteCourse}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="C:\Users\balah\source\repos\My_Notes3\My_Notes3\Resources\DeleteFolder_16x.png"/>
+                        <TextBlock Name="Tblk_Label_Del" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_removecourse}" VerticalAlignment="Center"/>
+                    <!--<materialDesign:PackIcon Kind="trash"  Foreground="Black" Margin="-3,0,0,0"/>-->
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+        </StackPanel>
+        <StackPanel Name="SP_CourseName" Grid.Column="1" Grid.Row="1" Margin="5" Orientation="Vertical" >
+            <!--<TextBlock Name="Tblock_Course" Text="{Binding Source={StaticResource l10n}, Path=locItems.course}" Margin="11,10,20,11.2"/>-->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <TextBlock Name="Tblk_Label_Course_Name" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_CourseName}" HorizontalAlignment="Left" MinWidth="120" />
+                <TextBox x:Name="Tbx_Course_Name" VerticalAlignment="Top" VerticalContentAlignment="Bottom" HorizontalAlignment="Right" MinWidth="250" Text="{Binding CourseName}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,12,0,0">
+                <TextBlock Name="Tblk_Label_Professor_Name" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_ProfessorName}" HorizontalAlignment="Left" MinWidth="120" />
+                <TextBox x:Name="Tbx_Professor_Name" VerticalContentAlignment="Bottom" HorizontalAlignment="Right" MinWidth="250" Text="{Binding ProfessorName}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,12,0,0">
+                <TextBlock Name="Tblk_Label_Professor_Contact" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_ProfessorContact}" HorizontalAlignment="Left" MinWidth="120" />
+                <TextBox x:Name="Tbx_Professor_Contact" VerticalContentAlignment="Bottom" HorizontalAlignment="Stretch" MinWidth="250" Text="{Binding ProfessorContact}"/>
+            </StackPanel>
+            <!--<TextBlock Name="Tblk_Course_Notes_Count" Text="{Binding ElementName=Lbx_Notes, Path=Items.Count}" Padding="5"/>
+            <TextBlock Name="Tblk_Course_Notes_Label" Text="Notes" Padding="0,5,0,0"/>-->
+        </StackPanel>
+        <StackPanel Grid.Column="0" Grid.Row="2" Margin="5" VerticalAlignment="Center">
+            <TextBox Name="Tbx_Search_Notes" Text="Filter Notes or Contents" Grid.Column="0" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" MouseDown="Tbx_Search_Notes_MouseDown" TextChanged="Tbx_Search_Notes_TextChanged" ToolTip="{Binding Source={StaticResource l10n}, Path=locItems.tooltip_filter_notes}" materialDesign:HintAssist.Hint = "Filter Notes and Contents">
+            </TextBox>
+
+        </StackPanel>
+        <StackPanel Margin="5" Orientation="Vertical" Grid.Row="3">
+            <ListBox x:Name="Lbx_Notes" HorizontalAlignment="Stretch" VerticalAlignment="Top" MinHeight="360" MaxHeight="360" SelectionMode="Extended" SelectionChanged="Lbx_Notes_SelectionChanged" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto"   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical">
+                            
+                                <TextBlock Name="Tblk_NoteNames" TextWrapping="Wrap" MinHeight="20" FontWeight="DemiBold" Text="{Binding NoteTitle}">
+                                  
+                                </TextBlock>
+                                <TextBlock Name="Tblk_NoteDates" TextWrapping="Wrap" MinHeight="16" FontWeight="Normal" Margin="5,0,0,0" HorizontalAlignment="Left" Text="{Binding NoteDate,StringFormat={}{0:d}}"/>
+                            
+                            <TextBlock Name="Tblk_NoteContents" TextWrapping="Wrap" MinHeight="15" FontStyle="Italic" FontWeight="Normal" Height="17" Padding="10,0,0,0" TextTrimming="CharacterEllipsis"  Text="{Binding NoteContent}"/>
+                        </StackPanel>
+                    </DataTemplate>
+
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+        <StackPanel Name="SP_Add_Remove_Note" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="4" Grid.Column="0">
+            <Button Name="Btn_Add_New_Note" Margin="20,10,10,0" Click="Btn_Add_New_Note_Click" Height="30" Width="50" ToolTip="{Binding Source={StaticResource l10n}, Path=locItems.tooltip_addNewNote}">
+                <Image Source="C:\Users\balah\source\repos\My_Notes3\My_Notes3\Resources\AddDocument_16x.png"/>
+                <!--<materialDesign:PackIcon Kind="ShapeSquarePlus"  Foreground="Black"  Margin="-4,0,0,0"/>-->
+            </Button>
+            <Button Name="Btn_Delete_Note" Margin="10,10,10,0" Click="Btn_Delete_Note_Click" Height="30" Width="50" ToolTip="{Binding Source={StaticResource l10n}, Path=locItems.tooltip_deleteNote}">
+                <Image Source="C:\Users\balah\source\repos\My_Notes3\My_Notes3\Resources\Trash_16x.png"/>
+                <!--<materialDesign:PackIcon Kind="trash"  Foreground="Black"  Margin="-4,0,0,0"/>-->
+            </Button>
+        </StackPanel>
+
+
+                 <StackPanel Name="SP_Note_Details" Margin="5"  Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Stretch" DataContext="{Binding ElementName=Lbx_Notes , Path=SelectedItem}">
+            <TextBlock Name="Tblk_Label_Note_Title" Text="{Binding Source={StaticResource l10n}, Path=locItems.label_NoteTitle}" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="120" />
+                        <TextBox x:Name="Tbx_Note_Title" Text="{Binding NoteTitle}" VerticalAlignment="Center" HorizontalAlignment="Left" Width="152"/>
+                        <DatePicker Name="DatePicker_Note_Date" Background="#EEEEEE" Margin="5,0,0,0" VerticalAlignment="Center" FontWeight="Bold" BorderThickness="20" SelectedDate="{Binding NoteDate}" HorizontalAlignment="Right" Width="103"/>
+                </StackPanel>
+        <StackPanel Grid.Column="1" Margin="5" Orientation="Vertical" Grid.Row="3"  DataContext="{Binding ElementName=Lbx_Notes , Path=SelectedItem}">
+            <TextBox x:Name="Tbx_Note_Content" TextWrapping="Wrap" Text="{Binding NoteContent}" SpellCheck.IsEnabled="True" Language="en-US" MinHeight="360" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" />
+
+        </StackPanel>
+        <StackPanel Margin="5" Grid.Row="1" Grid.RowSpan="2" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ListBox Name="Lbx_Multi_img" MinHeight="120">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding}" MaxHeight="70" Stretch="Fill"/>
+
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel IsItemsHost="true" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+            <Slider Name="SL_ImgScale" Margin="10" Width="200" Maximum="700" Minimum="100" VerticalAlignment="Bottom" Value="300"/>
+        </StackPanel>
+
+
+        <StackPanel Grid.Column="2"  Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" DataContext="{Binding ElementName=Lbx_Multi_img, Path=SelectedItem}">
+            <ScrollViewer Name="SV_selected_image" HorizontalScrollBarVisibility="Auto" MaxHeight="360" MaxWidth="350" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
+            <Viewbox Height="{Binding Value, ElementName=SL_ImgScale}">
+                <Image x:Name="IMG_Notes" Source="{Binding}"  Stretch="UniformToFill"/>
+            </Viewbox>
+            </ScrollViewer>
+
+
+            <!--<Image x:Name="IMG_Notes" Source="{Binding CurrentImage, Converter={StaticResource ImgConverter}}" MaxHeight="350" Stretch="Fill"/>-->
+        </StackPanel>
+        <StackPanel Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5" Orientation="Vertical">
+            
+            <StackPanel  Orientation="Horizontal">
+            <Button Name="Btn_Add_Image" Margin="20,10,10,10" HorizontalAlignment="Center" Click="Btn_Add_Image_Click" Height="30" Width="50" ToolTip="{Binding Source={StaticResource l10n}, Path=locItems.tooltip_addImage}">
+                    <StackPanel Orientation="Horizontal">
+                    <Image Source="C:\Users\balah\source\repos\My_Notes3\My_Notes3\Resources\AddImage_16x.png"/>
+                        <!--<TextBlock Name="Tblk_label_addimage" Text="Add Image"/>-->
+                        <!--<materialDesign:PackIcon Kind="ShapeSquarePlus"  Foreground="Black"  Margin="-4,0,0,0"/>-->
+                    </StackPanel>
+                </Button>
+            <Button Name="Btn_Delete_Image" Margin="10,10,10,10"  HorizontalAlignment="Center" Click="Btn_Delete_Image_Click" Height="30" Width="50" ToolTip="{Binding Source={StaticResource l10n}, Path=locItems.tooltip_deleteImage}">
+                    <Image Source="C:\Users\balah\source\repos\My_Notes3\My_Notes3\Resources\Trash_16x.png"/>
+                    <!--<materialDesign:PackIcon Kind="trash"  Foreground="Black"  Margin="-4,0,0,0"/>-->
+            </Button>
+        </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
